@@ -26,6 +26,13 @@ const countries = [
 ];
 
 export default function CountrySelection({ value, onChange }: CountrySelectionProps) {
+  const handleCountryChange = (country: string) => {
+    // Store the selected country in localStorage
+    localStorage.setItem('selectedCountry', country);
+    // Call the parent component's onChange handler
+    onChange(country);
+  };
+
   return (
     <div className="space-y-6">
       <div>
@@ -37,7 +44,7 @@ export default function CountrySelection({ value, onChange }: CountrySelectionPr
         </p>
       </div>
 
-      <Select value={value} onValueChange={onChange}>
+      <Select value={value} onValueChange={handleCountryChange}>
         <SelectTrigger className="w-full bg-secondary/50 border-secondary focus:border-primary input-glow">
           <SelectValue placeholder="Select a country" />
         </SelectTrigger>

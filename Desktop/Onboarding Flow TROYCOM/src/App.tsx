@@ -5,35 +5,31 @@ import { Progress } from '@/components/ui/progress';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { CheckCircle2, AlertCircle } from 'lucide-react';
 import CountrySelection from '@/components/CountrySelection';
-import PhoneSelection from '@/components/PhoneSelection';
-import OTPVerification from '@/components/OTPVerification';
 import BusinessSearch from '@/components/BusinessSearch';
 import NumberSelection from '@/components/NumberSelection';
+import BusinessType from '@/components/BusinessType';
 
 export type FormData = {
   country: string;
-  phoneNumber: string;
-  isPhoneVerified: boolean;
+  selectedNumber?: string;
+  businessType: string;
   businessSearch: {
     name: string;
     address?: string;
     website?: string;
-    businessType: string;
   } | null;
-  selectedNumber?: string;
 };
 
-const TOTAL_STEPS = 5;
+const TOTAL_STEPS = 4;
 
 function App() {
   const [currentStep, setCurrentStep] = useState(1);
   const [showGifOverlay, setShowGifOverlay] = useState(false);
   const [formData, setFormData] = useState<FormData>({
     country: '',
-    phoneNumber: '',
-    isPhoneVerified: false,
-    businessSearch: null,
     selectedNumber: '',
+    businessType: '',
+    businessSearch: null,
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<'success' | 'error' | null>(null);
@@ -64,13 +60,11 @@ function App() {
       case 1:
         return !!formData.country;
       case 2:
-        return !!formData.phoneNumber;
+        return !!formData.selectedNumber;
       case 3:
-        return formData.isPhoneVerified;
+        return !!formData.businessType;
       case 4:
         return !!formData.businessSearch?.name;
-      case 5:
-        return !!formData.selectedNumber;
       default:
         return true;
     }
@@ -106,12 +100,7 @@ function App() {
     }
   };
 
-  const handleVerificationComplete = () => {
-    updateFormData({ isPhoneVerified: true });
-    handleNext();
-  };
-
-  const handleBusinessSearch = (businessInfo: { name: string; address?: string; website?: string; businessType: string }) => {
+  const handleBusinessSearch = (businessInfo: { name: string; address?: string; website?: string }) => {
     updateFormData({ businessSearch: businessInfo });
     handleNext();
   };
@@ -121,13 +110,11 @@ function App() {
       case 1:
         return <CountrySelection value={formData.country} onChange={(country) => updateFormData({ country })} />;
       case 2:
-        return <PhoneSelection country={formData.country} value={formData.phoneNumber} onChange={(phoneNumber) => updateFormData({ phoneNumber })} />;
+        return <NumberSelection onSelect={handleNumberSelect} />;
       case 3:
-        return <OTPVerification phoneNumber={formData.phoneNumber} onVerificationComplete={handleVerificationComplete} />;
+        return <BusinessType value={formData.businessType} onChange={(businessType) => updateFormData({ businessType })} />;
       case 4:
         return <BusinessSearch onSelect={handleBusinessSearch} />;
-      case 5:
-        return <NumberSelection onSelect={handleNumberSelect} />;
       default:
         return null;
     }
@@ -138,12 +125,11 @@ function App() {
       <Card className="w-full max-w-xl p-8 glass-card relative overflow-hidden">
         {showGifOverlay ? (
           <div className="absolute inset-0 flex items-center justify-center bg-black/20 backdrop-blur-sm z-10">
-            <div className="w-full h-full flex items-center justify-center p-8">
+            <div className="w-[576px] h-[66px] flex items-center justify-center">
               <img 
                 src="/ThinkAnswer-ezgif.com-optimize.gif" 
                 alt="Building your number" 
-                className="w-full h-full object-cover"
-                style={{ minHeight: '400px' }}
+                className="w-full h-full object-contain"
               />
             </div>
           </div>

@@ -1,5 +1,5 @@
 import { Button } from '@/components/ui/button';
-import { Store, Briefcase, Utensils, Building2, Code, Truck } from 'lucide-react';
+import { Store, Utensils, Briefcase, Building2, Code, Truck } from 'lucide-react';
 
 interface BusinessTypeProps {
   value: string;
